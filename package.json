@@ -20,5 +20,6 @@
   "homepage": "https://github.com/Reply2Zain/djs-common#readme",
   "dependencies": {
     "discord.js": "^14.9.0"
-  }
+  },
+  "types": "./index.d.ts"
 }
