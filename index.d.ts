@@ -1,4 +1,4 @@
 
 declare namespace djsCommon {
-    export import ILogger = djsCommon.interfaces.ILogger;
+    export import ILogger = djsCommon.ILogger;
 }
