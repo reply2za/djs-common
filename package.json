@@ -12,12 +12,12 @@
     "type": "git",
     "url": "git+https://github.com/Reply2Zain/djs-common.git"
   },
-  "author": "Reply2Zain",
+  "author": "Reply2za",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Reply2Zain/djs-common/issues"
+    "url": "https://github.com/Reply2za/djs-common/issues"
   },
-  "homepage": "https://github.com/Reply2Zain/djs-common#readme",
+  "homepage": "https://github.com/Reply2za/djs-common#readme",
   "dependencies": {
     "discord.js": "^14.9.0"
   },
