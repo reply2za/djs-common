@@ -2,11 +2,11 @@
   "name": "@hoursofza/djs-common",
   "version": "1.0.6",
   "description": "A common djs utility package",
-  "main": "dist/main/index.js",
+  "main": "./dist/main/entry.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prerelease": "bash scripts/prerelease.bash",
-    "release": "npm publish --access public"
+    "release": "tsc && npm publish --access public"
   },
   "repository": {
     "type": "git",
@@ -21,5 +21,5 @@
   "dependencies": {
     "discord.js": "^14.9.0"
   },
-  "types": "./index.d.ts"
+  "types": "./src/main/entry.d.ts"
 }
