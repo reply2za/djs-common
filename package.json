@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prerelease": "bash scripts/prerelease.bash",
-    "release": "tsc && npm publish --access public"
+    "release": "tsc && npm publish --access public",
+    "release:dev": "tsc && npm publish --access public --tag dev"
   },
   "repository": {
     "type": "git",
