@@ -6,8 +6,8 @@ export abstract class CommandHandler<T> {
     clientCommands = new Collection<string, { run: (event: MessageEventCore<T>) => Promise<void> }>();
     adminCommands = new Collection<string, { run: (event: MessageEventCore<T>) => Promise<void> }>();
     scheduledCommands = new Collection<string, { run: (event: MessageEventCore<T>) => Promise<void> }>();
-    readonly #isAdmin: (id: string) => boolean;
-    readonly #sourcePath: string;
+    #isAdmin: (id: string) => boolean;
+    #sourcePath: string;
 
     protected constructor(isAdmin: (id: string) => boolean, sourcePath: string) {
         this.#isAdmin = isAdmin;
