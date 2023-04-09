@@ -31,7 +31,8 @@ export abstract class CommandHandler<T> {
     }
 
     /**
-     * Executes an event based on the event statement.
+     * Executes an event based on the event statement. Uses getCommand to get the command to run.
+     * All commands should have a run method that takes a MessageEventCore<T> as a parameter.
      * @param event
      */
     async execute(event: MessageEventCore<T>) {
