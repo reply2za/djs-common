@@ -5,9 +5,12 @@
   "main": "./dist/main/entry.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "prepare": "npm run build",
     "prerelease": "bash scripts/prerelease.bash",
     "release": "tsc && npm publish --access public",
-    "release:dev": "tsc && npm publish --access public --tag dev"
+    "release:dev": "tsc && npm publish --access public --tag dev",
+    "postversion": "npm run release"
   },
   "repository": {
     "type": "git",
