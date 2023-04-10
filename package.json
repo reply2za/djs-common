@@ -9,8 +9,7 @@
     "prepare": "npm run build",
     "prerelease": "bash scripts/prerelease.bash",
     "release": "tsc && npm publish --access public",
-    "release:dev": "tsc && npm publish --access public --tag dev",
-    "postversion": "npm run release"
+    "release:dev": "tsc && npm publish --access public --tag dev"
   },
   "repository": {
     "type": "git",
