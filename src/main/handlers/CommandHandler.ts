@@ -7,11 +7,13 @@ export abstract class CommandHandler<T> {
     adminCommands = new Collection<string, { run: (event: MessageEventCore<T>) => Promise<void> }>();
     scheduledCommands = new Collection<string, { run: (event: MessageEventCore<T>) => Promise<void> }>();
     #isAdmin: (id: string) => boolean;
-    #sourcePath: string;
+    #rootToCommands: string;
+    #localToCommands: string;
 
-    protected constructor(isAdmin: (id: string) => boolean, sourcePath: string) {
+    protected constructor(isAdmin: (id: string) => boolean, rootToCommands: string, localToCommands: string) {
         this.#isAdmin = isAdmin;
-        this.#sourcePath = sourcePath;
+        this.#rootToCommands = rootToCommands;
+        this.#localToCommands = localToCommands;
     }
 
     /**
@@ -74,18 +76,17 @@ export abstract class CommandHandler<T> {
 
 
     #loadSpecificCommands(cmdDirName: string, commandsMap: Map<string, any>) {
-        const innerPath = `commands/${cmdDirName}`;
-        const dirPath = `./${this.#sourcePath}/${innerPath}`;
+        const dirPath = `${this.#rootToCommands}/${cmdDirName}`;
         // maps a filename to the correct relative path
         const cmdFileReference = new Map();
         let rootFiles = this.#parseRootDirectory(dirPath);
-        rootFiles.jsFiles.forEach((fileName) => cmdFileReference.set(fileName, `../${innerPath}/${fileName}`));
+        rootFiles.jsFiles.forEach((fileName) => cmdFileReference.set(fileName, `${this.#localToCommands}/${cmdDirName}/${fileName}`));
         for (const subDirName of rootFiles.subDirs) {
             const subDirPath = `${dirPath}/${subDirName}`;
             const subRootFiles = this.#parseRootDirectory(subDirPath);
             if (subRootFiles.subDirs.length > 0) throw new Error('unsupported file structure');
             subRootFiles.jsFiles.forEach((fileName) =>
-                cmdFileReference.set(fileName, `../${innerPath}/${subDirName}/${subDirName}.js`)
+                cmdFileReference.set(fileName, `${this.#localToCommands}/${cmdDirName}/${subDirName}/${subDirName}.js`)
             );
         }
         cmdFileReference.forEach((relativePath, fileName) => {
