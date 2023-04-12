@@ -6,9 +6,9 @@ export abstract class CommandHandler<T> {
     clientCommands = new Collection<string, { run: (event: MessageEventCore<T>) => Promise<void> }>();
     adminCommands = new Collection<string, { run: (event: MessageEventCore<T>) => Promise<void> }>();
     scheduledCommands = new Collection<string, { run: (event: MessageEventCore<T>) => Promise<void> }>();
-    #isAdmin: (id: string) => boolean;
-    #rootToCommands: string;
-    #localToCommands: string;
+    readonly #isAdmin: (id: string) => boolean;
+    readonly #rootToCommands: string;
+    readonly #localToCommands: string;
 
     protected constructor(isAdmin: (id: string) => boolean, rootToCommands: string, localToCommands: string) {
         this.#isAdmin = isAdmin;
@@ -22,12 +22,15 @@ export abstract class CommandHandler<T> {
      * The 'scheduled' folder is optional.
      */
     loadAllCommands() {
-        this.#loadSpecificCommands('client', this.clientCommands);
-        this.#loadSpecificCommands('admin', this.adminCommands);
         try {
-            this.#loadSpecificCommands('scheduled', this.scheduledCommands);
+            this.#loadSpecificCommands('client', this.clientCommands);
+            this.#loadSpecificCommands('admin', this.adminCommands);
         } catch (e) {
-            console.log('notice: no scheduled commands found');
+            console.log('expected at least one client & one admin command');
+            throw e;
+        }
+        if (this.fsModule().existsSync(`${this.#rootToCommands}/scheduled`)) {
+            this.#loadSpecificCommands('scheduled', this.scheduledCommands);
         }
         console.log('-loaded commands-');
     }
@@ -42,7 +45,8 @@ export abstract class CommandHandler<T> {
     }
 
     /**
-     * Returns the command method for the given command name.
+     * Returns either a user or admin command.
+     * Only if the user is an admin will admin commands be retrievable.
      * @param statement The command name.
      * @param authorId The id of the author who sent the command.
      */
