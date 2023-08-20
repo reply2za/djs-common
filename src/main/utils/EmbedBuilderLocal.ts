@@ -2,12 +2,12 @@ import {
     ColorResolvable,
     EmbedAuthorOptions,
     EmbedBuilder,
-    EmbedField,
     EmbedFooterOptions,
     Message,
     RestOrArray,
     TextBasedChannel
 } from 'discord.js';
+import {EmbedFieldLocal} from "./types";
 
 /**
  * Local wrapper for EmbedBuilder.
@@ -58,12 +58,20 @@ export class EmbedBuilderLocal {
         return this;
     }
 
-    addFields(...value: RestOrArray<EmbedField>) {
+    /**
+     * Appends fields to the embed
+     * @param value
+     */
+    addFields(...value: RestOrArray<EmbedFieldLocal>) {
         this._embed.addFields(...value);
         return this;
     }
 
-    setFields(...value: RestOrArray<EmbedField>) {
+    /**
+     * Sets the embed's fields
+     * @param value
+     */
+    setFields(...value: RestOrArray<EmbedFieldLocal>) {
         this._embed.setFields(...value);
         return this;
     }

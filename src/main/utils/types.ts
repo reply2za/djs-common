@@ -13,3 +13,8 @@ export type MessageEventCore<T> = {
     data: Map<T, any>;
 };
 
+export type EmbedFieldLocal = {
+    name: string;
+    value: string;
+    inline?: boolean;
+}
