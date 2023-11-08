@@ -10,6 +10,13 @@ export abstract class CommandHandler<T> {
     readonly #rootToCommands: string;
     readonly #localToCommands: string;
 
+    /**
+     *
+     * @param isAdmin A function that returns true if the user is an admin.
+     * @param rootToCommands The path to the commands folder from the project's root.
+     * @param localToCommands The path to the commands folder from the concrete CommandHandler class file.
+     * @protected
+     */
     protected constructor(isAdmin: (id: string) => boolean, rootToCommands: string, localToCommands: string) {
         this.#isAdmin = isAdmin;
         this.#rootToCommands = rootToCommands;
@@ -24,10 +31,14 @@ export abstract class CommandHandler<T> {
     loadAllCommands() {
         try {
             this.#loadSpecificCommands('client', this.clientCommands);
+        } catch (e) {
+            console.log('expected at least one client command');
+            throw e;
+        }
+        try {
             this.#loadSpecificCommands('admin', this.adminCommands);
         } catch (e) {
-            console.log('expected at least one client & one admin command');
-            throw e;
+            console.log('[WARN] no admin commands found');
         }
         if (this.fsModule().existsSync(`${this.#rootToCommands}/scheduled`)) {
             this.#loadSpecificCommands('scheduled', this.scheduledCommands);
