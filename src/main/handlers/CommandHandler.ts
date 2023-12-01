@@ -95,20 +95,17 @@ export abstract class CommandHandler<T> {
         // maps a filename to the correct relative path
         const cmdFileReference = new Map();
         let rootFiles = this.#parseRootDirectory(dirPath);
-        rootFiles.jsFiles.forEach((fileName) => cmdFileReference.set(fileName, `${this.#localToCommands}/${cmdDirName}/${fileName}`));
+        rootFiles.jsFiles.forEach((fileName) => {
+            commandsMap.set(fileName, this.requireModule()(`${this.#localToCommands}/${cmdDirName}/${fileName}`));
+        });
         for (const subDirName of rootFiles.subDirs) {
             const subDirPath = `${dirPath}/${subDirName}`;
             const subRootFiles = this.#parseRootDirectory(subDirPath);
             if (subRootFiles.subDirs.length > 0) throw new Error('unsupported file structure');
             subRootFiles.jsFiles.forEach((fileName) =>
-                cmdFileReference.set(fileName, `${this.#localToCommands}/${cmdDirName}/${subDirName}/${subDirName}.js`)
+                commandsMap.set(fileName, this.requireModule()(`${this.#localToCommands}/${cmdDirName}/${subDirName}/${subDirName}.js`))
             );
         }
-        cmdFileReference.forEach((relativePath, fileName) => {
-            const commandName = fileName.split('.')[0];
-            const command = this.requireModule()(relativePath);
-            commandsMap.set(commandName, command);
-        });
     }
 
     /**
