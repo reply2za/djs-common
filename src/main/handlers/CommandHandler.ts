@@ -61,7 +61,9 @@ export abstract class CommandHandler<T> {
      * @param statement The command name.
      * @param authorId The id of the author who sent the command.
      */
-    getCommand(statement: string, authorId: string): { run: (event: MessageEventCore<T>) => Promise<void> } | undefined {
+    getCommand(statement: string, authorId: string): {
+        run: (event: MessageEventCore<T>) => Promise<void>
+    } | undefined {
         if (this.#isAdmin(authorId)) {
             return this.adminCommands.get(statement) || this.clientCommands.get(statement);
         } else {
@@ -93,19 +95,33 @@ export abstract class CommandHandler<T> {
     #loadSpecificCommands(cmdDirName: string, commandsMap: Map<string, any>) {
         const dirPath = `${this.#rootToCommands}/${cmdDirName}`;
         // maps a filename to the correct relative path
-        const cmdFileReference = new Map();
         let rootFiles = this.#parseRootDirectory(dirPath);
         rootFiles.jsFiles.forEach((fileName) => {
-            commandsMap.set(fileName, this.requireModule()(`${this.#localToCommands}/${cmdDirName}/${fileName}`));
+            this.#addCommandFileToMap(commandsMap, fileName, `${this.#localToCommands}/${cmdDirName}/${fileName}`);
         });
         for (const subDirName of rootFiles.subDirs) {
             const subDirPath = `${dirPath}/${subDirName}`;
             const subRootFiles = this.#parseRootDirectory(subDirPath);
             if (subRootFiles.subDirs.length > 0) throw new Error('unsupported file structure');
             subRootFiles.jsFiles.forEach((fileName) =>
-                commandsMap.set(fileName, this.requireModule()(`${this.#localToCommands}/${cmdDirName}/${subDirName}/${subDirName}.js`))
+                this.#addCommandFileToMap(commandsMap, fileName, `${this.#localToCommands}/${cmdDirName}/${subDirName}/${subDirName}.js`)
             );
         }
+    }
+
+    /**
+     * Adds a command file to the commands map. The name of the command is the file name up to the first '.'.
+     * @param commandsMap The map to add the command to.
+     * @param fileName The name of the file.
+     * @param path The relative path to the file.
+     * @private
+     */
+    #addCommandFileToMap(commandsMap: Map<string, any>, fileName: string, path: string) {
+        commandsMap.set(this.#formatFileName(fileName), this.requireModule()(path));
+    }
+
+    #formatFileName(fileName: string) {
+        return fileName.split('.')[0];
     }
 
     /**
