@@ -1,6 +1,6 @@
 import {
     ColorResolvable,
-    EmbedAuthorOptions,
+    Embed, EmbedAuthorData, EmbedAuthorOptions,
     EmbedBuilder,
     EmbedFooterOptions,
     Message,
@@ -13,38 +13,56 @@ import {EmbedFieldLocal} from "./types";
  * Local wrapper for EmbedBuilder.
  */
 export class EmbedBuilderLocal {
-    _embed;
+    _embed: EmbedBuilder;
 
-    constructor() {
+
+    /**
+     * Creates a new EmbedBuilderLocal. If an embed is provided, it will be applied to the new embed. If not, a new embed will be created.
+     * Timestamps are not transferred from the provided embed.
+     * @param embed
+     */
+    constructor(embed?: Embed | undefined) {
         this._embed = new EmbedBuilder();
+        if (embed){
+            // apply the embed to the new embed
+            this.setAuthor(embed.author);
+            this.setColor(embed.color);
+            this.setDescription(embed.description);
+            this.setFooter(embed.footer);
+            embed.image?.url && this.setImage(embed.image.url);
+            embed.thumbnail?.url && this.setThumbnail(embed.thumbnail.url);
+            this.setTitle(embed.title);
+            this.setURL(embed.url);
+            this.addFields(embed.fields);
+        }
     }
 
-    setTitle(value: string) {
+    setTitle(value: string | null) {
         this._embed.setTitle(value);
         return this;
     }
 
-    setDescription(value: string) {
+    setDescription(value: string | null) {
         this._embed.setDescription(value);
         return this;
     }
 
-    setColor(value: ColorResolvable) {
+    setColor(value: ColorResolvable | null) {
         this._embed.setColor(value);
         return this;
     }
 
-    setURL(value: string) {
+    setURL(value: string | null) {
         this._embed.setURL(value);
         return this;
     }
 
-    setAuthor(value: EmbedAuthorOptions) {
+    setAuthor(value: EmbedAuthorOptions | null) {
         this._embed.setAuthor(value);
         return this;
     }
 
-    setFooter(value: EmbedFooterOptions | string) {
+    setFooter(value: EmbedFooterOptions | string | null) {
         if (typeof value === 'string') {
             this._embed.setFooter({ text: value });
         } else {
@@ -76,8 +94,13 @@ export class EmbedBuilderLocal {
         return this;
     }
 
-    setThumbnail(value: string) {
+    setThumbnail(value: string | null) {
         this._embed.setThumbnail(value);
+        return this;
+    }
+
+    setTimestamp(value: number | Date | null | undefined) {
+        this._embed.setTimestamp(value);
         return this;
     }
 
@@ -108,7 +131,7 @@ export class EmbedBuilderLocal {
      * @param content The content to send with the message.
      * @return {Message} The edited message.
      */
-    async edit(message: Message, content = '') {
+    async edit(message: Message, content = ''): Promise<Message> {
         return message.edit({ embeds: [this.build()], content });
     }
 }
