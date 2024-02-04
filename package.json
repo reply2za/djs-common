@@ -8,6 +8,7 @@
     "build": "tsc",
     "prepare": "npm run build",
     "bump:patch": "npm version patch --message \"chore(release): %s\"",
+    "bump:minor": "npm version minor --message \"chore(release): %s\"",
     "release": "tsc && npm publish --access public",
     "release:dev": "tsc && npm publish --access public --tag dev"
   },
@@ -22,10 +23,10 @@
   },
   "homepage": "https://github.com/Reply2za/djs-common#readme",
   "dependencies": {
-    "discord.js": "^14.9.0"
+    "discord.js": "~14.14.1"
   },
   "devDependencies": {
-    "typescript": "^5.0.3"
+    "typescript": "^5.3.0"
   },
   "types": "./index.d.ts",
   "files": [
