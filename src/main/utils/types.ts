@@ -18,3 +18,8 @@ export type EmbedFieldLocal = {
     value: string;
     inline?: boolean;
 }
+
+export type CommandResponse<T> = {
+    command: { run: (event: MessageEventCore<T>) => Promise<void> } | undefined
+    isAdminCommand: boolean
+}
