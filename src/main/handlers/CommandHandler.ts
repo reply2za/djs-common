@@ -32,13 +32,17 @@ export abstract class CommandHandler<T> {
         try {
             this.#loadSpecificCommands('client', this.clientCommands);
         } catch (e) {
-            console.log('expected at least one client command');
+            console.log('[ERROR] expected at least one client command');
             throw e;
         }
         try {
             this.#loadSpecificCommands('admin', this.adminCommands);
-        } catch (e) {
-            console.log('[WARN] no admin commands found');
+        } catch (e: any) {
+            if (e.message.includes(`no such file or directory, scandir '${this.#rootToCommands}/admin'`)) {
+                console.log('[WARN] no admin commands found');
+            } else {
+                throw e;
+            }
         }
         if (this.fsModule().existsSync(`${this.#rootToCommands}/scheduled`)) {
             this.#loadSpecificCommands('scheduled', this.scheduledCommands);
