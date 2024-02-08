@@ -1,6 +1,6 @@
 import path from "path";
 import {Collection, TextChannel} from "discord.js";
-import {MessageEventCore} from "../utils/types";
+import {CommandResponse, MessageEventCore} from "../utils/types";
 
 export abstract class CommandHandler<T> {
     clientCommands = new Collection<string, { run: (event: MessageEventCore<T>) => Promise<void> }>();
@@ -52,7 +52,14 @@ export abstract class CommandHandler<T> {
      * @param event
      */
     async execute(event: MessageEventCore<T>) {
-        await this.getCommand(event.statement, event.message.author.id)?.run(event);
+        const commandObj = this.getCommand(event.statement, event.message.author.id);
+        if (!commandObj.command) {
+            this.commandNotFoundDuringExecution(event);
+            return;
+        } else {
+            await commandObj.command.run(event);
+            this.postCommandExecution(event, commandObj.isAdminCommand)
+        }
     }
 
     /**
@@ -60,14 +67,14 @@ export abstract class CommandHandler<T> {
      * Only if the user is an admin will admin commands be retrievable.
      * @param statement The command name.
      * @param authorId The id of the author who sent the command.
+     * @return Whether the comma
      */
-    getCommand(statement: string, authorId: string): {
-        run: (event: MessageEventCore<T>) => Promise<void>
-    } | undefined {
+    getCommand(statement: string, authorId: string): CommandResponse<T> {
         if (this.#isAdmin(authorId)) {
-            return this.adminCommands.get(statement) || this.clientCommands.get(statement);
+            const adminCommand = this.adminCommands.get(statement);
+            return adminCommand ? {command: adminCommand, isAdminCommand: true} : this.getClientCommand(statement);
         } else {
-            return this.clientCommands.get(statement);
+            return this.getClientCommand(statement);
         }
     }
 
@@ -147,6 +154,28 @@ export abstract class CommandHandler<T> {
             // list of subdirectories
             subDirs,
         };
+    }
+
+    private getClientCommand(statement: string): CommandResponse<T> {
+        return {command: this.clientCommands.get(statement), isAdminCommand: false};
+    }
+
+    /**
+     * Upon successful command execution, this method is called.
+     * @param event
+     * @protected
+     */
+    protected postCommandExecution(event: MessageEventCore<T>, isAdminCommand: boolean) {
+        // implement in subclass
+    }
+
+    /**
+     * If the command is not found during execution, this method is called.
+     * @param event
+     * @protected
+     */
+    protected commandNotFoundDuringExecution(event: MessageEventCore<T>) {
+        // implement in subclass
     }
 
     protected abstract fsModule(): typeof import("fs");
