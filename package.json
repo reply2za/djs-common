@@ -9,7 +9,7 @@
     "prepare": "npm run build",
     "bump:patch": "npm version patch --message \"chore(release): %s\"",
     "bump:minor": "npm version minor --message \"chore(release): %s\"",
-    "release": "tsc && npm publish --access public",
+    "release": "tsc && npm publish --access public && git push",
     "release:dev": "tsc && npm publish --access public --tag dev"
   },
   "repository": {
