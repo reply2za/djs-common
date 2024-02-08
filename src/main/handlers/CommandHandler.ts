@@ -71,7 +71,7 @@ export abstract class CommandHandler<T> {
      * Only if the user is an admin will admin commands be retrievable.
      * @param statement The command name.
      * @param authorId The id of the author who sent the command.
-     * @return Whether the comma
+     * @return {CommandResponse} An object containing the command and whether it is an admin command.
      */
     getCommand(statement: string, authorId: string): CommandResponse<T> {
         if (this.#isAdmin(authorId)) {
