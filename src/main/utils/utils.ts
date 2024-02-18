@@ -8,8 +8,8 @@ import {Collection, EmojiIdentifierResolvable, Message, MessageReaction, Reactio
  * @param reactionsList The reactions to attach the message.
  * @param executeCallback A callback function for when any reaction is clicked.
  * @param endCallback Optional - A callback for when the reaction collector expires. If none then it will remove all reactions on the reactMsg.
- * @param filter Optional - A filter for the reactionCollector. If none is provided then follows the policy/description of reactionUsers.
- * @param filterTime Optional - The duration in which the reactionCollector is in effect.
+ * @param filter Optional - A filter for the reactionCollector. If none is provided then it only allows the reactionUserIds to activate the reaction.
+ * @param filterTime Optional - The duration in milliseconds for which the reactionCollector is in effect.
  */
 export async function attachReactionsToMessage(
     reactMsg: Message,
