@@ -1,7 +1,10 @@
 import {Collection, EmojiIdentifierResolvable, Message, MessageReaction, ReactionCollector, User} from "discord.js";
 
+
+
 /**
  * Attaches a reaction with a reaction collector to a specific message.
+ * @param botId The id of the bot that will attach the reaction to the message.
  * @param reactMsg The message to attach the reaction to.
  * @param reactionUserIds The list of userIds that can activate the effect of the reaction.
  * An empty list allows any author to activate the reaction. Will not be used if a custom filter is provided.
@@ -12,6 +15,7 @@ import {Collection, EmojiIdentifierResolvable, Message, MessageReaction, Reactio
  * @param filterTime Optional - The duration in milliseconds for which the reactionCollector is in effect.
  */
 export async function attachReactionsToMessage(
+    botId: string,
     reactMsg: Message,
     reactionUserIds: string[],
     reactionsList: EmojiIdentifierResolvable[],
@@ -27,10 +31,9 @@ export async function attachReactionsToMessage(
     }
     if (!filter) {
         filter = (reaction: MessageReaction, user: User) => {
-            if (!reactionUserIds.length) return true;
             return !!(
-                reactionUserIds.filter((id) => id === user.id).length &&
-                reactionsList.includes(reaction.emoji.name!)
+                (!reactionUserIds.length || reactionUserIds.filter((id) => id === user.id).length) &&
+                reactionsList.includes(reaction.emoji.name!)  && user.id !== botId
             );
         };
     }
