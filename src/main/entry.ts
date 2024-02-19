@@ -3,6 +3,6 @@ import {MessageEventCore, CommandResponse} from "./utils/types";
 import {ILogger} from "./interfaces/ILogger";
 import {CommandHandler} from "./handlers/CommandHandler";
 import {EventHandler} from "./handlers/EventHandler";
-import {attachReactionsToMessage} from "./utils/utils";
+import {Utils} from "./utils/utils";
 
-export {EmbedBuilderLocal, ILogger, CommandHandler, MessageEventCore, EventHandler, CommandResponse, attachReactionsToMessage};
+export {EmbedBuilderLocal, ILogger, CommandHandler, MessageEventCore, EventHandler, CommandResponse, Utils};
