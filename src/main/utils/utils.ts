@@ -29,7 +29,7 @@ export class Utils {
     ): Promise<ReactionCollector> {
         if (!endCallback) {
             endCallback = async () => {
-                await reactMsg.reactions.removeAll();
+                reactMsg.deletable && await reactMsg.reactions.removeAll();
             };
         }
         if (!filter) {
