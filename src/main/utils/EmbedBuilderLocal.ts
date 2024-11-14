@@ -1,6 +1,6 @@
 import {
     ColorResolvable,
-    Embed, EmbedAuthorData, EmbedAuthorOptions,
+    Embed, EmbedAuthorOptions,
     EmbedBuilder,
     EmbedFooterOptions,
     Message,
@@ -8,6 +8,7 @@ import {
     TextBasedChannel
 } from 'discord.js';
 import {EmbedFieldLocal} from "./types";
+import { APIEmbed } from 'discord-api-types/v10';
 
 /**
  * Local wrapper for EmbedBuilder.
@@ -104,7 +105,7 @@ export class EmbedBuilderLocal {
         return this;
     }
 
-    get data() {
+    get data(): APIEmbed {
         return this._embed.data;
     }
 
