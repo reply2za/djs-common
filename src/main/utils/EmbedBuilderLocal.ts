@@ -5,7 +5,7 @@ import {
     EmbedFooterOptions,
     Message,
     RestOrArray,
-    TextBasedChannel
+    TextBasedChannel, TextChannel
 } from 'discord.js';
 import {EmbedFieldLocal} from "./types";
 import { APIEmbed } from 'discord-api-types/v10';
@@ -123,7 +123,7 @@ export class EmbedBuilderLocal {
      * @return {Message} The new message.
      */
     async send(channel: TextBasedChannel): Promise<Message> {
-        return channel.send({ embeds: [this.build()] });
+        return (<TextChannel>channel).send({ embeds: [this.build()] });
     }
 
     /**
