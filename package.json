@@ -1,6 +1,6 @@
 {
   "name": "@hoursofza/djs-common",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "A common djs utility package",
   "main": "./dist/main/entry.js",
   "scripts": {
