@@ -56,7 +56,8 @@ export abstract class CommandHandler<T> {
      * @param event
      */
     async execute(event: MessageEventCore<T>) {
-        const commandObj = this.getCommand(event.statement, event.message.author.id);
+        const userId = event.message?.author.id ?? event.interaction?.user.id;
+        const commandObj = this.getCommand(event.statement, userId!);
         if (!commandObj.command) {
             this.commandNotFoundDuringExecution(event);
             return;
