@@ -1,10 +1,12 @@
-import {Message} from "discord.js";
+import {Interaction, Message} from "discord.js";
 
 export type MessageEventCore<T> = {
     // the command name
     statement: Readonly<string>;
     // the message object
-    message: Message;
+    message?: Message;
+    // A slash command
+    interaction?: Interaction;
     // the message parameters in an array
     args: string[];
     // the prefix used
